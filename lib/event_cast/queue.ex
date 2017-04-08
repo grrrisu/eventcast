@@ -9,19 +9,30 @@ defmodule EventCast.Queue do
     { :noreply, [event|events] }
   end
 
-  def handle_call(:next, _client, [event|tail]) do
-    future = Task.async(EventCast.Worker, :fire, [event, event.function])
-    result = Task.await(future)
-    IO.puts("result: #{result}")
-    { :reply, result, [tail] }
+  def handle_cast(:next, []) do
+    # wait until a new event will be enqueued
+    { :noreply, [] }
+  end
+
+  def handle_cast(:next, [event|tail]) do
+    fire_event(event)
+    next()
+    { :noreply, tail }
   end
 
   def enqueue(event) do
     GenServer.cast(__MODULE__, {:enqueue, event})
+    next()
   end
 
   def next do
-    GenServer.call(__MODULE__, :next)
+    GenServer.cast(__MODULE__, :next)
+  end
+
+  defp fire_event(event) do
+    future = Task.async(EventCast.Worker, :fire, [event, event.function])
+    result = Task.await(future)
+    IO.puts("result: #{result}")
   end
 
 end
