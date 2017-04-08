@@ -8,9 +8,13 @@ defmodule EventCast.MessageHandler do
     queue payload, &(String.reverse(&1))
   end
 
-  defp queue(payload, function) do
-    %Event{ payload: payload, function: function }
+  def queue(payload, function) do
+    create_event(payload, function)
     |> EventCast.Queue.enqueue
+  end
+
+  def create_event(payload, function) do
+    %Event{ arguments: payload, function: function }
   end
 
 end

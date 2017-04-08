@@ -30,7 +30,7 @@ defmodule EventCast.Queue do
   end
 
   defp fire_event(event) do
-    future = Task.async(EventCast.Worker, :fire, [event, event.function])
+    future = Task.async(EventCast.Worker, :fire, [event])
     result = Task.await(future)
     IO.puts("result: #{result}")
   end
