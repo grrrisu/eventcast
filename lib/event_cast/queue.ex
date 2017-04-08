@@ -10,7 +10,7 @@ defmodule EventCast.Queue do
   end
 
   def handle_call(:next, _client, [event|tail]) do
-    future = Task.async(EventCast.Worker, :fire, [event, &(String.reverse(&1))])
+    future = Task.async(EventCast.Worker, :fire, [event, event.function])
     result = Task.await(future)
     IO.puts("result: #{result}")
     { :reply, result, [tail] }

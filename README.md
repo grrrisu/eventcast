@@ -1,6 +1,12 @@
 # EventCast
 
 ```elixir
+  msg = %EventCast.Message{context: :echo, payload: 1}
+  EventCast.MessageHandler.process(msg)
+  EventCast.Queue.next
+```
+
+```elixir
   event = %Event{payload: "Hello World"}
   EventCast.Queue.enqueue(event)
   EventCast.Queue.next

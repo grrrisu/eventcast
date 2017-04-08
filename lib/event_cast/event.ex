@@ -1,3 +1,3 @@
 defmodule Event do
-  defstruct name: nil, payload: nil
+  defstruct payload: nil, function: nil
 end
