@@ -6,7 +6,7 @@ defmodule EventCast.Queue do
   end
 
   def handle_cast({:enqueue, event} , events) do
-    { :noreply, [event|events] }
+    { :noreply, events ++ [event] }
   end
 
   def handle_cast(:next, []) do
@@ -30,8 +30,9 @@ defmodule EventCast.Queue do
   end
 
   defp fire_event(event) do
-    future = Task.async(EventCast.Worker, :fire, [event])
-    result = Task.await(future)
+    result =  Task.async(EventCast.Worker, :fire, [event])
+              |> Task.await
+              # |> Broadcaster.reply
     IO.puts("result: #{result}")
   end
 

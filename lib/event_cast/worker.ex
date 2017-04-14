@@ -1,6 +1,6 @@
 defmodule EventCast.Worker do
 
-  def fire(event) do
+  def fire(%Event{} = event) do
     event.function.(event.arguments)
   end
 

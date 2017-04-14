@@ -1,9 +1,8 @@
 # EventCast
 
 ```elixir
-  msg = %EventCast.Message{context: :echo, payload: 1}
-  EventCast.MessageHandler.process(msg)
-  EventCast.Queue.next
+  msg = %EventCast.Message{context: :base, action: :reverse, payload: "Hello World"}
+  EventCast.MessageDispatcher.process(msg)
 ```
 
 ```elixir
