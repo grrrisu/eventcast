@@ -9,6 +9,7 @@ defmodule EventCast.Supervisor do
   def start_queue(supervisor) do
     {:ok, _pid } = Supervisor.start_child(supervisor, worker(EventCast.Queue, []))
     {:ok, _pid } = Supervisor.start_child(supervisor, worker(EventCast.MessageDispatcher, []))
+    {:ok, _pid } = Supervisor.start_child(supervisor, worker(EventCast.Broadcaster, []))
   end
 
   def init(_) do

@@ -5,27 +5,31 @@ defmodule EventCast.MessageDispatcher do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
-  def handle_call({:process, %EventCast.Message{context: context} = message}, _client, clients) do
+  def handle_call({:process, %EventCast.Message{context: context} = message}, client, clients) do
+    register(client)
     case context do
       :base ->
-        EventCast.MessageHandler.process(message)
-        #  spawn(EventCast.MessageHandler, :process, [message])
+        spawn(EventCast.MessageHandler, :process, [message])
         { :reply, {:ok, message} , clients }
       unknown ->
         { :reply, {:error, "unknown context #{unknown}"} , clients }
     end
   end
 
-  def handle_cast(:register, client, clients) do
-    { :noreply, [client|clients] }
+  def register(client) do
+    EventCast.Broadcaster.add(client)
   end
 
-  def handle_cast(:unregister, client, clients) do
-    { :noreply, List.delete(clients, client) }
+  def unregister(client) do
+    EventCast.Broadcaster.remove(client)
   end
 
-  def process(message) do
+  def process(%EventCast.Message{} = message) do
     GenServer.call(__MODULE__, {:process, message})
+  end
+
+  def process(context \\ :base, action \\ :echo, payload \\ nil) do
+    process(%EventCast.Message{context: context, action: action, payload: payload})
   end
 
 end

@@ -30,10 +30,9 @@ defmodule EventCast.Queue do
   end
 
   defp fire_event(event) do
-    result =  Task.async(EventCast.Worker, :fire, [event])
-              |> Task.await
-              # |> Broadcaster.reply
-    IO.puts("result: #{result}")
+    Task.async(EventCast.Worker, :fire, [event])
+    |> Task.await
+    |> EventCast.Broadcaster.broadcast_to_all
   end
 
 end
