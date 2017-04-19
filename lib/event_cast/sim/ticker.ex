@@ -2,25 +2,30 @@ defmodule EventCast.Sim.Ticker do
   @interval 2000 # 2 sec
 
   def start_link do
-    spawn(__MODULE__, :tick, [])
+    pid = spawn(__MODULE__, :tick, [])
+    {:ok, pid}
   end
 
   def tick do
     receive do
     after @interval ->
-      object = EventCast.Sim.Loop.next
-      event  = create_sim_event(object)
-      EventCast.Queue.enqueue(event)
+      enqueue_next_object()
       tick()
     end
   end
 
-  # def create_sim_event(nil) do
-  #   # do nothing
-  # end
+  def enqueue_next_object do
+    EventCast.Sim.Loop.next
+    |> enqueue_sim_event
+  end
 
-  def create_sim_event(object) do
-    %Event{payload: object, function: fn -> IO.puts("tick") end }
+  def enqueue_sim_event(nil) do
+    # do nothing
+  end
+
+  def enqueue_sim_event(object) do
+    %Event{payload: object, function: &IO.puts("tick #{inspect &1}") }
+    |> EventCast.Queue.enqueue
   end
 
 end
