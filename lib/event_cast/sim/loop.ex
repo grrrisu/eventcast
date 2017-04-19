@@ -13,22 +13,9 @@ defmodule EventCast.Sim.Loop do
   end
 
   def next do
-    object = first()
-    rotate()
-    object
-  end
-
-  def first do
-    Agent.get(__MODULE__, fn
-      ([]) -> nil
-      ([head|_tail]) -> head
-    end)
-  end
-
-  def rotate do
-    Agent.update(__MODULE__, fn
-      ([]) -> []
-      ([head|tail]) -> tail ++ [head]
+    Agent.get_and_update(__MODULE__, fn
+      ([]) -> { nil, [] }
+      ([head|tail]) -> { head, tail ++ [head] }
     end)
   end
 

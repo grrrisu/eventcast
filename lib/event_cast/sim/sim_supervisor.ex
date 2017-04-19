@@ -7,6 +7,7 @@ defmodule EventCast.Sim.Supervisor do
   end
 
   def start_children(supervisor) do
+    {:ok, _pid } = Supervisor.start_child(supervisor, worker(EventCast.Sim.Time, []))
     {:ok, _pid } = Supervisor.start_child(supervisor, worker(EventCast.Sim.Loop, []))
     {:ok, _pid } = Supervisor.start_child(supervisor, worker(EventCast.Sim.Ticker, []))
   end
