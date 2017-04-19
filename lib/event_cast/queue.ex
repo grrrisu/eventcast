@@ -20,6 +20,10 @@ defmodule EventCast.Queue do
     { :noreply, tail }
   end
 
+  def enqueue(nil) do
+    # ignore
+  end
+
   def enqueue(event) do
     GenServer.cast(__MODULE__, {:enqueue, event})
     next()
