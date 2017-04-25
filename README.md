@@ -1,6 +1,10 @@
 # EventCast
 
 ```elixir
+  Client.reverse "Hello World"
+```
+
+```elixir
   msg = %EventCast.Message{context: :base, action: :reverse, payload: "Hello World"}
   EventCast.MessageDispatcher.process(msg)
 ```
