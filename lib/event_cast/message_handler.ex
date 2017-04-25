@@ -8,6 +8,10 @@ defmodule EventCast.MessageHandler do
     queue payload, &(String.reverse(&1))
   end
 
+  def process(%EventCast.Message{action: :crash, payload: _payload}) do
+    queue nil, &(raise "CRASH!!! #{inspect &1}")
+  end
+
   def process(%EventCast.Message{action: unknown, payload: _}) do
     IO.puts "TODO unknown action #{unknown}, send error back to client"
   end

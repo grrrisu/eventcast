@@ -8,6 +8,10 @@ defmodule Client do
     call(:reverse, payload)
   end
 
+  def crash(payload \\ nil) do
+    call(:crash, payload)
+  end
+
   defp call(action, payload) do
     EventCast.MessageDispatcher.process(:base, action, payload)
     receive do
