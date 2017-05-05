@@ -34,7 +34,7 @@ defmodule EventCast.Queue do
   end
 
   defp fire_event(event) do
-    Task.async(EventCast.Worker, :fire, [event])
+    Task.async(EventCast.EventProcess, :fire, [event])
     |> Task.await
     |> EventCast.Broadcaster.broadcast_to_all
   end

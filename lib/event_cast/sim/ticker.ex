@@ -24,7 +24,7 @@ defmodule EventCast.Sim.Ticker do
   end
 
   def enqueue_sim_event(object) do
-    %Event{arguments: object, function: &IO.puts("tick #{inspect &1}") }
+    %EventCast.Event{function: fn -> IO.puts("tick #{inspect object}") end }
     |> EventCast.Queue.enqueue
   end
 

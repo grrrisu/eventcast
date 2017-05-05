@@ -1,28 +1,24 @@
 defmodule EventCast.MessageHandler do
 
   def process(%EventCast.Message{action: :echo, payload: payload}) do
-    queue payload, &(&1)
+    queue fn -> payload end
   end
 
   def process(%EventCast.Message{action: :reverse, payload: payload}) do
-    queue payload, &(String.reverse(&1))
+    queue fn -> (String.reverse(payload)) end
   end
 
   def process(%EventCast.Message{action: :crash, payload: _payload}) do
-    queue nil, &(raise "CRASH!!! #{inspect &1}")
+    queue fn -> raise "CRASH!!!" end
   end
 
   def process(%EventCast.Message{action: unknown, payload: _}) do
     IO.puts "TODO unknown action #{unknown}, send error back to client"
   end
 
-  def queue(payload, function) do
-    create_event(payload, function)
+  defp queue(function) do
+    %EventCast.Event{ function: function }
     |> EventCast.Queue.enqueue
-  end
-
-  def create_event(payload, function) do
-    %Event{ arguments: payload, function: function }
   end
 
 end

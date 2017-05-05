@@ -8,8 +8,8 @@ defmodule Client do
     call(:reverse, payload)
   end
 
-  def crash(payload \\ nil) do
-    call(:crash, payload)
+  def crash() do
+    call(:crash, nil)
   end
 
   defp call(action, payload) do
@@ -20,8 +20,7 @@ defmodule Client do
   defp listen do
     receive do
       {:answer, answer} ->
-        IO.puts "answer to received:"
-        IO.puts inspect(answer)
+        IO.puts "answer: #{inspect(answer)}"
         #listen()
     end
   end
