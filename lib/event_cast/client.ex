@@ -14,10 +14,15 @@ defmodule Client do
 
   defp call(action, payload) do
     EventCast.MessageDispatcher.process(:base, action, payload)
+    listen()
+  end
+
+  defp listen do
     receive do
       {:answer, answer} ->
-        IO.puts "answer to #{action} received:"
+        IO.puts "answer to received:"
         IO.puts inspect(answer)
+        #listen()
     end
   end
 

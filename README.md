@@ -1,5 +1,25 @@
 # EventCast
 
+
+## Usage (WIP)
+
+start the server
+```shell
+  elixir --sname event_cast -S mix run --no-halt
+```
+
+```shell
+  iex --sname client
+```
+
+replace <server_host> with actual value
+```elixir
+ Node.connect :"event_cast@<server_host>"
+ Node.spawn(:"event_cast@<server_host>", fn -> Client.echo "hello" end)
+```
+
+### Within IEX
+
 ```elixir
   Client.reverse "Hello World"
 ```
@@ -10,7 +30,7 @@
 ```
 
 ```elixir
-  event = %Event{payload: "Hello World"}
+  event = %Event{arguments: "Hello World", function: &(String.reverse(&1))}
   EventCast.Queue.enqueue(event)
   EventCast.Queue.next
 ```
